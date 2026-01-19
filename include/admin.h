@@ -4,26 +4,17 @@
 #include "types.h"
 #include "fileman.h"
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
-status_t fetch_managers(ManagerInfoList *list, size_t *len);
+status_t fetch_members(MemberInfoList *list, size_t *len, MemberType type);
 
-status_t add_new_manager(ManagerInfo *info, ManagerInfoList *list);
+status_t add_new_(MemberInfo *info, MemberInfoList *list, MemberType type);
 
-status_t remove_manager(ManagerInfo *info, ManagerInfoList *list);
+status_t remove_member(MemberInfo *info, MemberInfoList *list, MemberType type);
 
-status_t check_manager_sysid(ManagerInfo *srcinfo, ManagerInfo **dstinfo, ManagerInfoList *list);
+status_t check_member_sysid(MemberInfo *srcinfo, MemberInfo **dstinfo, MemberInfoList *list, MemberType type);
 
-status_t sync_managers_file(ManagerInfoList *list);
-
-status_t fetch_employes(ManagerInfoList *list, size_t *len);
-
-status_t add_new_employe(EmployeInfo *info, EmployeInfoList *list);
-
-status_t remove_employe(EmployeInfo *info, EmployeInfoList *list);
-
-status_t check_empolye_sysid(ManagerInfo *srcinfo, EmployeInfo **dstinfo,  EmployeInfoList *list);
-
-status_t sync_employes_file(EmployeInfoList *list);
+status_t sync_members(MemberInfoList *list, MemberType type);
 
 #endif

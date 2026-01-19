@@ -4,24 +4,30 @@
 #include "types.h"
 #include <stdio.h>
 
-status_t open_manager_file(const char *path);
+#define FILEWITHTYPE(type) ((type == MANAGER) ? managerfile : employefile)
 
-status_t fetch_manager(ManagerInfo *info);
+status_t open_member_file(const char *path, MemberType type);
 
-status_t append_manager(ManagerInfo *info);
+status_t fetch_member_file(MemberInfo *info, MemberType type);
 
-status_t sync_manager(ManagerInfoList *list);
+status_t sync_member_file(MemberInfoList *list, MemberType type);
 
-status_t close_manager_file(void);
+status_t close_member_file(MemberType type);
 
-status_t open_employe_file(const char *path);
+status_t open_lesson_file(const char *path);
 
-status_t fetch_employe(EmployeInfo *info);
+status_t fetch_lesson_file(LessonInfo *info);
 
-status_t append_employe(EmployeInfo *info);
+status_t sync_lesson_file(LessonInfoList *list);
 
-status_t sync_employe(EmployeInfoList *list);
+status_t close_lesson_file(void);
 
-status_t close_employe_file(void);
+status_t open_scornum_file(const char *path);
+
+status_t fetch_scornum_file(ScornumInfo *info);
+
+status_t sync_scornum_file(ScornumInfoList *list);
+
+status_t close_scornum_file(void);
 
 #endif
