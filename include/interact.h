@@ -1,0 +1,32 @@
+#ifndef STUDENTMANAGER_INTERACT_H
+#define STUDENTMANAGER_INTERACT_H
+
+#include "types.h"
+#include "objectctl.h"
+#include "errorctl.h"
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+
+#define ISIN_RANGE(val, x, y) ((val >= x) && (val <= y))
+
+#define CHECK_SCANF(val0, val1, err)\
+	do {if (val0 != val1) {return _opt = MAIN_FAILURE;}} while (0)
+
+void inact_appinfo(void);
+
+MainOpt inact_main(void);
+
+AdminOpt inact_admin(void);
+
+ManagerOpt inact_manager(void);
+
+EmployeOpt inact_employe(void);
+
+extern const char *intro;
+extern const char *main_options;
+extern const char *admin_options;
+extern const char *manager_options;
+extern const char *employe_options;
+
+#endif
