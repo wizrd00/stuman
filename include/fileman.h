@@ -2,32 +2,26 @@
 #define STUDENTMAN_FILEMAN_H
 
 #include "types.h"
+#include "nodectl.h"
 #include <stdio.h>
 
-#define FILEWITHTYPE(type) ((type == MANAGER) ? managerfile : employefile)
+#define SET_FILE_WITH_TYPE(file, type)\
+	do {\
+		switch (type) {\
+		case MANAGER : file = managerfile; break;\
+		case EMPLOYE : file = employefile; break;\
+		case STUDENT : file = studentfile; break;\
+		case LESSONS : file = lessonsfile; break;\
+		case SCORNUM : file = scornumfile; break;\
+		}\
+	} while (0)
 
-status_t open_member_file(const char *path, MemberType type);
+status_t open_object_file(const char *path, objecttype_t type);
 
-status_t fetch_member_file(MemberInfo *info, MemberType type);
+status_t fetch_object_file(object_t *obj, objecttype_t type);
 
-status_t sync_member_file(MemberInfoList *list, MemberType type);
+status_t sync_object_file(node_t *nod, objecttype_t type);
 
-status_t close_member_file(MemberType type);
-
-status_t open_lesson_file(const char *path);
-
-status_t fetch_lesson_file(LessonInfo *info);
-
-status_t sync_lesson_file(LessonInfoList *list);
-
-status_t close_lesson_file(void);
-
-status_t open_scornum_file(const char *path);
-
-status_t fetch_scornum_file(ScornumInfo *info);
-
-status_t sync_scornum_file(ScornumInfoList *list);
-
-status_t close_scornum_file(void);
+status_t close_object_file(objecttype_t type);
 
 #endif
