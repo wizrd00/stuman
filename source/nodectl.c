@@ -41,12 +41,12 @@ status_t node_remove(node_t *nod, object_t *obj)
 	return _stat;
 }
 
-status_t node_search(node_t *nod, object_t *obj, object_t **hdl, bool (*compare)(object_t *obj0, object_t *obj1))
+status_t node_search(node_t *nod, node_t **fnd, object_t *obj, bool (*compare)(object_t *obj0, object_t *obj1))
 {
 	status_t _stat = SUCCESS;
 	bool cmp = false;
 	while (!(cmp = compare(obj, nod->obj)) && (nod->next != NULL))
 		nod = nod->next;
-	*hdl = (cmp) ? nod->obj : (_stat = NOFOUND, NULL);
+	*fnd = (cmp) ? nod : (_stat = NOFOUND, NULL);
 	return _stat;
 }

@@ -23,10 +23,22 @@ ManagerOpt inact_manager(void);
 
 EmployeOpt inact_employe(void);
 
+AdminReportOpt inact_admin_report(void);
+
+ChangeLessonInfoOpt inact_change_lesson_info(void);
+
+ManagerReportOpt inact_manager_report(void);
+
+ManagerAccountOpt inact_manager_account(void);
+
 extern const char *intro;
 extern const char *main_options;
 extern const char *admin_options;
 extern const char *manager_options;
 extern const char *employe_options;
+extern const char *admin_report_options;
+extern const char *change_lesson_info_options;
+extern const char *manager_report_options;
+extern const char *manager_account_options;
 
 #endif

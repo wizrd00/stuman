@@ -45,7 +45,7 @@ status_t download_objects(node_t **nod, size_t *len, objecttype_t typ)
 		if ((_stat = fetch_object_file(obj, typ)) == DNFETCH)
 			break;
 		CHECK_STAT(node_append(*nod, obj, APPEND_TOP));
-		*nod = GET_HEAD_NODE(*nod);
+		GET_HEAD_NODE(*nod);
 		(*len)++;
 	}
 	return _stat;
@@ -69,6 +69,7 @@ status_t check_object_sysid(node_t *nod, object_t *obj, object_t **hdl, objectty
 {
 	status_t _stat = SUCCESS;
 	bool (*cmp)(object_t *obj0, object_t *obj1);
+	node_t *found_node;
 	switch (typ) {
 	case MANAGER : cmp = compare_manager; break;
 	case EMPLOYE : cmp = compare_employe; break;
@@ -76,7 +77,8 @@ status_t check_object_sysid(node_t *nod, object_t *obj, object_t **hdl, objectty
 	case LESSONS : cmp = compare_lessons; break;
 	case SCORNUM : cmp = compare_scornum; break;
 	}
-	CHECK_STAT(node_search(nod, obj, hdl, cmp));
+	CHECK_STAT(node_search(nod, &found_node, obj, cmp));
+	*hdl = found_node->obj;
 	return _stat;
 }
 
