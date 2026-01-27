@@ -25,6 +25,7 @@ status_t fetch_object_file(object_t *obj, objecttype_t type)
 	status_t _stat = SUCCESS;
 	FILE *file;
 	SET_FILE_WITH_TYPE(file, type);
+	CHECK_PTR(file, ERROPEN);
 	CHECK_EQUAL(0, feof(file), DNFETCH);
 	fread((void *) obj, sizeof (object_t), 1, file);
 	return _stat;
@@ -35,6 +36,7 @@ status_t sync_object_file(node_t *nod, objecttype_t type)
 	status_t _stat = SUCCESS;
 	FILE *file;
 	SET_FILE_WITH_TYPE(file, type);
+	CHECK_PTR(file, ERROPEN);
 	CHECK_EQUAL(0, fseek(file, 0, SEEK_SET), ERRSEEK);
 	while (true) {
 		fwrite((void *) nod->obj, sizeof (object_t), 1, file);
@@ -50,6 +52,7 @@ status_t close_object_file(objecttype_t type)
 	status_t _stat = SUCCESS;
 	FILE *file;
 	SET_FILE_WITH_TYPE(file, type);
+	CHECK_PTR(file, ERROPEN);
 	CHECK_EQUAL(0, fclose(file), ERRCLOS);
 	return _stat;
 }
