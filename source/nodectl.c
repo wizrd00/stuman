@@ -31,7 +31,7 @@ status_t node_remove(node_t *nod, object_t *obj)
 {
 	status_t _stat = SUCCESS;
 	node_t *found_nod = NULL;
-	while (nod->next != NULL)
+	while ((nod->obj != obj) && (nod->next != NULL))
 		nod = nod->next;
 	CHECK_EQUAL(obj, nod->obj, NOFOUND);
 	nod->prev->next = nod->next;

@@ -4,7 +4,7 @@ const char *intro =
 	"Welcome to StuMan version " VERSION "\n"
 	"\t|\n"
 	"\t|____Maintainer : Arash Ghaffari (homework project for IKIU)\n"
-	"\t|____GitHub : https://github.com/wizrd00\n"
+	"\t|____Source : https://github.com/wizrd00/stuman\n"
 	"\t|____Written in : The C99 (ISO99)\n"
 	"\t|____Help : in all menus `b` is for return back to previous menu and `q` is for exit the program\n";
 const char *inputstr = "Enter your choice(q:exit, b:back) : ";
@@ -73,6 +73,24 @@ const char *manager_account_options =
 	"1.Change password\n"
 	"2.Change phone number\n"
 	"3.Change email address\n";
+const char *change_student_info_options =
+	"\n"
+	"1.Change student major\n"
+	"2.Change student phone number\n"
+	"3.Change student email address\n";
+const char *employe_report_options =
+	"\n"
+	"1.Find students by first name\n"
+	"2.Find students by last name\n"
+	"3.Find students by id number\n"
+	"5.List students who born in date range\n"
+	"5.List students in specific major\n"
+	"6.List students born in specific city\n";
+const char *employe_account_options =
+	"\n"
+	"1.Change password\n"
+	"2.Change phone number\n"
+	"3.Change email address\n";
 
 void inact_appinfo(void)
 {
@@ -108,7 +126,7 @@ AdminOpt inact_admin(void)
 	case '1' : _opt = ADMIN_NEW_EMPLOYE; break;
 	case '2' : _opt = ADMIN_NEW_EMPLOYE; break;
 	case '3' : _opt = ADMIN_LIST_MEMBER; break;
-	case '4' : _opt = ADMIN_REMOVE_EMPLOYE; break;
+	case '4' : _opt = ADMIN_REMOVE_MANAGER; break;
 	case '5' : _opt = ADMIN_REMOVE_EMPLOYE; break;
 	case '6' : _opt = ADMIN_REPORTS; break;
 	case '7' : _opt = ADMIN_BACKUP_DATABASE; break;
@@ -243,6 +261,63 @@ ManagerAccountOpt inact_manager_account(void)
 	case '4' : _opt = MANAGER_ACCOUNT_BACK; break;
 	case '5' : _opt = MANAGER_ACCOUNT_EXIT; break;
 	default : _opt = MANAGER_ACCOUNT_FAILURE;
+	}
+	return _opt;
+}
+
+ChangeStudentInfoOpt inact_change_student_info(void)
+{
+	ChangeStudentInfoOpt _opt;
+	char inopt;
+	printf(change_student_info_options);
+	printf(inputstr);
+	CHECK_SCANF(scanf("%c", &inopt), 1, CHANGE_STUDENT_FAILURE);
+	switch (inopt) {
+	case '1' : _opt = CHANGE_STUDENT_INFO_MAJOR; break;
+	case '2' : _opt = CHANGE_STUDENT_INFO_PHONE; break;
+	case '3' : _opt = CHANGE_STUDENT_INFO_EMAIL; break;
+	case 'b' : _opt = CHANGE_STUDENT_INFO_BACK; break;
+	case 'q' : _opt = CHANGE_STUDENT_INFO_EXIT; break;
+	default : _opt = CHANGE_STUDENT_INFO_FAILURE;
+	}
+	return _opt;
+}
+
+EmployeReportOpt inact_employe_report(void)
+{
+	EmployeReportOpt _opt;
+	char inopt;
+	printf(employe_report_options);
+	printf(inputstr);
+	CHECK_SCANF(scanf("%c", &inopt), 1, EMPLOYE_REPORT_FAILURE);
+	switch (inopt) {
+	case '1' : _opt = EMPLOYE_REPORT_FIND_STUDENTS_INFO_BYFIRSTNAME; break;
+	case '2' : _opt = EMPLOYE_REPORT_FIND_STUDENTS_INFO_BYLASTNAME; break;
+	case '3' : _opt = EMPLOYE_REPORT_FIND_STUDENT_INFO_BYIDNUM; break;
+	case '4' : _opt = EMPLOYE_REPORT_LIST_STUDENTS_IN_DATE_RANGE; break;
+	case '5' : _opt = EMPLOYE_REPORT_LIST_STUDENTS_SPECIFIC_MAJOR; break;
+	case '6' : _opt = EMPLOYE_REPORT_LIST_STUDENTS_SPECIFIC_CITY; break;
+	case 'b' : _opt = EMPLOYE_REPORT_BACK; break;
+	case 'q' : _opt = EMPLOYE_REPORT_EXIT; break;
+	default : _opt = EMPLOYE_REPORT_FAILURE;
+	}
+	return _opt;
+}
+
+EmployeAccountOpt inact_employe_account(void)
+{
+	EmployeAccountOpt _opt;
+	char inopt;
+	printf(employe_account_options);
+	printf(inputstr);
+	CHECK_SCANF(scanf("%c", &inopt), 1, EMPLOYE_ACCOUNT_FAILURE);
+	switch (inopt) {
+	case '1' : _opt = EMPLOYE_ACCOUNT_CHANGE_PASSWORD; break;
+	case '2' : _opt = EMPLOYE_ACCOUNT_CHANGE_PHONE; break;
+	case '3' : _opt = EMPLOYE_ACCOUNT_CHANGE_EMAIL; break;
+	case 'b' : _opt = EMPLOYE_ACCOUNT_BACK; break;
+	case 'q' : _opt = EMPLOYE_ACCOUNT_EXIT; break;
+	default : EMPLOYE_ACCOUNT_FAILURE;
 	}
 	return _opt;
 }

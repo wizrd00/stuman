@@ -6,12 +6,14 @@
 #include <time.h>
 
 #define VERSION "0.1.0"
+#define SUSPENDTIME (time_t) 300
 #define MAXUNAMESIZE 32
 #define MAXPASSDSIZE 32
 #define MAXLNAMESIZE 64
 #define MAXGNAMESIZE 64
 #define MAXIDNUMSIZE 11
 #define MAXPHONESIZE 12
+#define MAXEMAILSIZE 256
 #define MANAGERFILEPATH "./manager.info"
 #define EMPLOYEFILEPATH "./employe.info"
 #define STUDENTFILEPATH "./student.info"
@@ -29,6 +31,15 @@
 
 #define CHECK_PTR(val, err)\
 	do {if (val == NULL) {return _stat = err;}} while (0)
+
+#define CHECK_INCTL(val)\
+	do {if (val != 0) {return;}} while (0)
+
+#define CHECK_INCTL_FREE(val, ptr)\
+	do {if (val != 0) {free((void *) ptr); ptr = NULL; return;}} while (0)
+
+#define CHECK_OUTCTL(val)\
+	do {if (val != 0) {return;}} while (0)
 
 typedef enum {
 	SUCCESS,
@@ -155,6 +166,36 @@ typedef enum {
 	MANAGER_ACCOUNT_FAILURE
 } ManagerAccountOpt;
 
+typedef enum {
+	CHANGE_STUDENT_INFO_MAJOR,
+	CHANGE_STUDENT_INFO_PHONE,
+	CHANGE_STUDENT_INFO_EMAIL,
+	CHANGE_STUDENT_INFO_BACK,
+	CHANGE_STUDENT_INFO_EXIT,
+	CHANGE_STUDENT_INFO_FAILURE
+} ChangeStudentInfoOpt;
+
+typedef enum {
+	EMPLOYE_REPORT_FIND_STUDENTS_INFO_BYFIRSTNAME,
+	EMPLOYE_REPORT_FIND_STUDENTS_INFO_BYLASTNAME,
+	EMPLOYE_REPORT_FIND_STUDENT_INFO_BYIDNUM,
+	EMPLOYE_REPORT_LIST_STUDENTS_IN_DATE_RANGE,
+	EMPLOYE_REPORT_LIST_STUDENTS_SPECIFIC_MAJOR,
+	EMPLOYE_REPORT_LIST_STUDENTS_SPECIFIC_CITY,
+	EMPLOYE_REPORT_BACK,
+	EMPLOYE_REPORT_EXIT,
+	EMPLOYE_REPORT_FAILURE
+} EmployeReportOpt;
+
+typedef enum {
+	EMPLOYE_ACCOUNT_CHANGE_PASSWORD,
+	EMPLOYE_ACCOUNT_CHANGE_PHONE,
+	EMPLOYE_ACCOUNT_CHANGE_EMAIL,
+	EMPLOYE_ACCOUNT_BACK,
+	EMPLOYE_ACCOUNT_EXIT,
+	EMPLOYE_ACCOUNT_FAILURE
+} EmployeAccountOpt;
+
 typedef union {
 	struct ManagerInfo {
 		size_t sysid;
@@ -165,7 +206,7 @@ typedef union {
 		char gname[MAXGNAMESIZE];
 		char idnum[MAXIDNUMSIZE];
 		char phone[MAXPHONESIZE];
-		char *email;
+		char email[MAXEMAILSIZE];
 		bool status;
 		time_t start_time;
 		time_t end_time;
@@ -178,7 +219,7 @@ typedef union {
 		char fname[MAXUNAMESIZE];
 		char lname[MAXLNAMESIZE];
 		char phone[MAXPHONESIZE];
-		char *email;
+		char email[MAXEMAILSIZE];
 		bool status;
 		time_t start_time;
 		time_t end_time;
@@ -193,8 +234,8 @@ typedef union {
 		char birth[MAXLNAMESIZE];
 		char major[MAXLNAMESIZE];
 		char phone[MAXPHONESIZE];
+		char email[MAXEMAILSIZE];
 		time_t birth_time;
-		char *email;
 	} student;
 	struct LessonInfo {
 		size_t sysid;
