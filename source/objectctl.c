@@ -78,7 +78,8 @@ status_t check_object_sysid(node_t *nod, object_t *obj, object_t **hdl, objectty
 	case SCORNUM : cmp = compare_scornum; break;
 	}
 	CHECK_STAT(node_search(nod, &found_node, obj, cmp));
-	*hdl = found_node->obj;
+	if (*hdl != NULL)
+		*hdl = found_node->obj;
 	return _stat;
 }
 

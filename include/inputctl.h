@@ -2,62 +2,78 @@
 #define STUDENTMANAGER_INPUTCTL_H
 
 #include "types.h"
-#include "objectctl.h"
+#include "utils/unamecheck.h"
+#include "utils/passdcheck.h"
 #include <stdio.h>
 
-int inctl_get_uname(char *uname, size_t *sysid, node_t *nod)
-{
-	if (nod == NULL) // don't search
-		;
-	else //search the list
-		;
-	return 0;
-}
+status_t inctl_get_uname(char *uname, const char *msg);
 
-int inctl_get_passd(char *passd);
+status_t inctl_get_passd(char *passd, const char *msg);
 
-int inctl_get_fname(char *fname);
+status_t inctl_get_manager_fname(char *fname);
 
-int inctl_get_lname(char *lname);
+status_t inctl_get_manager_lname(char *lname);
 
-int inctl_get_gname(char *gname);
+status_t inctl_get_manager_uname(char *uname);
 
-int inctl_get_date(time_t *_time);
+status_t inctl_get_manager_passd(char *passd);
 
-int inctl_get_idnum(char *idnum);
+status_t inctl_get_manager_gname(char *gname);
 
-int inctl_get_phone(char *phone);
+status_t inctl_get_manager_date(time_t *dst);
 
-int inctl_get_email(char *email);
+status_t inctl_get_manager_idnum(char *idnum);
 
-int inctl_get_rank(unsigned int *rank);
+status_t inctl_get_manager_phone(char *phone);
 
-int inctl_verify_admin_uname(void);
+status_t inctl_get_manager_email(char *email);
 
-int inctl_verify_admin_passd(void);
+status_t inctl_get_employe_fname(char *fname);
 
-int inctl_search_manager(object_t **obj, node_t *nod);
+status_t inctl_get_employe_lname(char *lname);
 
-int inctl_verify_passd(const char *passd);
+status_t inctl_get_employe_uname(char *uname);
 
-int inctl_get_lesson_name(char *lname);
+status_t inctl_get_employe_passd(char *passd);
 
-int inctl_get_lesson_sysid(size_t *sysid, node_t *nod);
+status_t inctl_get_employe_date(time_t *dst);
 
-int inctl_get_lesson_unit(unsigned short *unit);
+status_t inctl_get_employe_phone(char *phone);
 
-int inctl_get_lesson_type(LessonType *type);
+status_t inctl_get_employe_email(char *email);
 
-int inctl_get_scornum_sysid(size_t *sysid, node_t *nod);
+status_t inctl_get_employe_rank(unsigned int *rank);
 
-int inctl_get_scornum_idnum(char *idnumstr, unsigned long *idnumint);
+status_t inctl_get_lesson_lname(char *lname);
 
-int inctl_get_scornum_score(unsigned char *score);
+status_t inctl_get_lesson_sysid(size_t *sysid);
 
-int inctl_search_lesson_sysid(object_t **obj, node_t *nod);
+status_t inctl_get_lesson_unit(unsigned short *unit);
 
-int inctl_search_scornum(object_t **obj, node_t *nod);
+status_t inctl_get_lesson_type(LessonType *type);
 
-int inctl_search_employe(object_t **obj, node_t *nod);
+status_t inctl_get_scornum_sysid(size_t *sysid);
+
+status_t inctl_get_scornum_idnum(char *idnumstr, unsigned long *idnumint);
+
+status_t inctl_get_scornum_score(unsigned char *score);
+
+status_t inctl_get_student_fname(char *fname);
+
+status_t inctl_get_student_lname(char *lname);
+
+status_t inctl_get_student_sysid(size_t *sysid);
+
+status_t inctl_get_student_major(char *major);
+
+status_t inctl_get_student_idnum(char *idnum);
+
+status_t inctl_get_student_birth(char *birth);
+
+status_t inctl_get_student_birth_time(time_t *dst);
+
+status_t inctl_get_student_phone(char *phone);
+
+status_t inctl_get_student_email(char *email);
 
 #endif

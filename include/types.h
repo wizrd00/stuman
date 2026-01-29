@@ -6,6 +6,7 @@
 #include <time.h>
 
 #define VERSION "0.1.0"
+#define TRYCOUNT 3
 #define SUSPENDTIME (time_t) 300
 #define MAXUNAMESIZE 32
 #define MAXPASSDSIZE 32
@@ -31,15 +32,6 @@
 
 #define CHECK_PTR(val, err)\
 	do {if (val == NULL) {return _stat = err;}} while (0)
-
-#define CHECK_INCTL(val)\
-	do {if (val != 0) {return;}} while (0)
-
-#define CHECK_INCTL_FREE(val, ptr)\
-	do {if (val != 0) {free((void *) ptr); ptr = NULL; return;}} while (0)
-
-#define CHECK_OUTCTL(val)\
-	do {if (val != 0) {return;}} while (0)
 
 typedef enum {
 	SUCCESS,

@@ -9,7 +9,7 @@ node_t *scornum_list;
 object_t *registrar;
 objecttype_t registrar_type;
 
-object_t *editable_obj;
+object_t *edit_obj;
 
 void handle_main(void)
 {
@@ -56,8 +56,18 @@ void handle_admin(void)
 		handle_admin_exit,
 		handle_admin_failure
 	};
-	CHECK_INCTL(inctl_verify_admin_uname());
-	CHECK_INCTL(inctl_verify_admin_passd());
+	char uname[MAXUNAMESIZE];
+	char passd[MAXPASSDSIZE];
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if ((inctl_get_uname(uname, "Enter Admin Username : ") == SUCCESS) && (strcmp("admin", uname) == 0))
+			break;
+		else if (i == TRYCOUNT)
+			return;
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if ((inctl_get_passd(passd, "Enter Admin Password : ") == SUCCESS) && (strcmp("p455w0rd", passd) == 0))
+			break;
+		else if (i == TRYCOUNT)
+			return;
 	while (true)
 		HANDLE(inact_admin);
 	return;
@@ -69,15 +79,81 @@ void handle_new_manager(void)
 	object_t *obj = (object_t *) calloc(1, sizeof (object_t));
 	if (obj == NULL)
 		fatal_error_exit("memory allocation failed! exiting...");
-	CHECK_INCTL_FREE(inctl_get_fname(obj->manager.fname), obj);
-	CHECK_INCTL_FREE(inctl_get_lname(obj->manager.lname), obj);
-	CHECK_INCTL_FREE(inctl_get_uname(obj->manager.uname, &obj->manager.sysid, manager_list), obj);
-	CHECK_INCTL_FREE(inctl_get_passd(obj->manager.passd), obj);
-	CHECK_INCTL_FREE(inctl_get_gname(obj->manager.gname), obj);
-	CHECK_INCTL_FREE(inctl_get_date(&obj->manager.start_time), obj);
-	CHECK_INCTL_FREE(inctl_get_idnum(obj->manager.idnum), obj);
-	CHECK_INCTL_FREE(inctl_get_phone(obj->manager.phone), obj);
-	CHECK_INCTL_FREE(inctl_get_email(obj->manager.email), obj);
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_manager_fname(obj->manager.fname) == SUCCESS) {
+			break;
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_manager_lname(obj->manager.lname) == SUCCESS) {
+			break;
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_manager_uname(obj->manager.uname) == SUCCESS) {
+			obj->manager.sysid = checksum(obj->manager.uname, strnlen(obj->manager.uname, MAXUNAMESIZE));
+			if (check_object_sysid(manager_list, obj, NULL, MANAGER) == NOFOUND)
+				break;
+			logic_error("username %s already in use, try different one", obj->manager.uname);
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_manager_passd(obj->manager.passd) == SUCCESS) {
+			break;	
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_manager_gname(obj->manager.gname) == SUCCESS) {
+			break;
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_manager_date(&obj->manager.start_time) == SUCCESS) {
+			break;
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_manager_idnum(obj->manager.idnum) == SUCCESS) {
+			break;
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_manager_phone(obj->manager.phone) == SUCCESS) {
+			break;
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_manager_email(obj->manager.email) == SUCCESS) {
+			break;
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
 	obj->manager.status = true;
 	if ((_stat = add_object(manager_list, obj)) != SUCCESS) {
 		stat_error(_stat, "failed to add manager, try again!");
@@ -92,14 +168,73 @@ void handle_new_employe(void)
 	object_t *obj = (object_t *) calloc(1, sizeof (object_t));
 	if (obj == NULL)
 		fatal_error_exit("memory allocation failed! exiting...");
-	CHECK_INCTL_FREE(inctl_get_fname(obj->employe.fname), obj);
-	CHECK_INCTL_FREE(inctl_get_lname(obj->employe.lname), obj);
-	CHECK_INCTL_FREE(inctl_get_uname(obj->employe.uname, &obj->employe.sysid, employe_list), obj);
-	CHECK_INCTL_FREE(inctl_get_passd(obj->employe.passd), obj);
-	CHECK_INCTL_FREE(inctl_get_date(&obj->employe.start_time), obj);
-	CHECK_INCTL_FREE(inctl_get_phone(obj->employe.phone), obj);
-	CHECK_INCTL_FREE(inctl_get_email(obj->employe.email), obj);
-	CHECK_INCTL_FREE(inctl_get_rank(&obj->employe.rank), obj);
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_employe_fname(obj->employe.fname) == SUCCESS) {
+			break;
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_employe_lname(obj->employe.lname) == SUCCESS) {
+			break;
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_employe_uname(obj->employe.uname) == SUCCESS) {
+			obj->employe.sysid = checksum(obj->employe.uname, strnlen(obj->employe.uname, MAXUNAMESIZE));
+			if (check_object_sysid(employe_list, obj, NULL, EMPLOYE) == NOFOUND)
+				break;
+			logic_error("username %s already in use, try different one", obj->employe.uname);
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_employe_passd(obj->employe.passd) == SUCCESS) {
+			break;	
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_employe_date(&obj->employe.start_time) == SUCCESS) {
+			break;
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_employe_phone(obj->employe.phone) == SUCCESS) {
+			break;
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_employe_email(obj->employe.email) == SUCCESS) {
+			break;
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_employe_rank(&obj->employe.rank) == SUCCESS) {
+			break;
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
 	obj->employe.status = true;
 	if ((_stat = add_object(employe_list, obj)) != SUCCESS) {
 		stat_error(_stat, "failed to add employe, try again!");
@@ -110,8 +245,8 @@ void handle_new_employe(void)
 
 void handle_list_members(void)
 {
-	CHECK_OUTCTL(outctl_list_member(manager_list));
-	CHECK_OUTCTL(outctl_list_member(employe_list));
+	outctl_list_member(manager_list, MANAGER);
+	outctl_list_member(employe_list, EMPLOYE);
 	return;
 }
 
@@ -120,13 +255,17 @@ void handle_remove_manager(void)
 	status_t _stat = SUCCESS;
 	object_t obj;
 	object_t *found_obj;
-	CHECK_INCTL(inctl_get_uname(obj.manager.uname, &obj.manager.sysid, NULL));
-	if ((_stat = check_object_sysid(manager_list, &obj, &found_obj, MANAGER)) == NOFOUND) {
-		found_error("there is no manager with username %s in database", obj.manager.uname);
-	} else {
-		if (remove_object(manager_list, found_obj) == NOFOUND)
-			found_error("remove failed! this error must not happen! ABORT...");
-	}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_manager_uname(obj.manager.uname) == SUCCESS) {
+			if (check_object_sysid(manager_list, &obj, &found_obj, MANAGER) == SUCCESS) {
+				if (remove_object(manager_list, found_obj) == NOFOUND)
+					found_error("remove failed! this error must not happen! ABORT...");
+				break;
+			}
+			found_error("there is no manager with username %s in database", obj.manager.uname);
+		} else if (i == TRYCOUNT) {
+			return;
+		}
 	return;	
 }
 
@@ -135,13 +274,17 @@ void handle_remove_employe(void)
 	status_t _stat = SUCCESS;
 	object_t obj;
 	object_t *found_obj;
-	CHECK_INCTL(inctl_get_uname(obj.employe.uname, &obj.employe.sysid, NULL));
-	if ((_stat = check_object_sysid(employe_list, &obj, &found_obj, EMPLOYE)) == NOFOUND) {
-		found_error("there is no employee with username %s in database", obj.employe.uname);
-	} else {
-		if (remove_object(employe_list, found_obj) == NOFOUND)
-			found_error("remove failed! this error must not happen! ABORT...");
-	}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_employe_uname(obj.employe.uname) == SUCCESS) {
+			if (check_object_sysid(employe_list, &obj, &found_obj, EMPLOYE) == NOFOUND) {
+				if (remove_object(employe_list, found_obj) == NOFOUND)
+					found_error("remove failed! this error must not happen! ABORT...");
+				break;
+			}
+			found_error("there is no employee with username %s in database", obj.employe.uname);
+		} else if (i == TRYCOUNT) {
+			return;
+		}
 	return;
 }
 
@@ -217,18 +360,33 @@ void handle_manager(void)
 		handle_manager_exit,
 		handle_manager_failure
 	};
+	object_t obj;
 	size_t lessons_count;
 	size_t scornum_count;
 	time_t access_time;
-	CHECK_INCTL(inctl_search_manager(&registrar, manager_list));
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_manager_uname(obj.manager.uname) == SUCCESS) {
+			obj.manager.sysid = checksum(obj.manager.uname, strnlen(obj.manager.uname, MAXUNAMESIZE));
+			if (check_object_sysid(manager_list, &obj, &registrar, MANAGER) == SUCCESS)
+				break;
+			logic_error("there is no username %s in database, first you need a Manager Account", obj.manager.uname);
+		} else if (i == TRYCOUNT) {
+			return;
+		}
 	if (time(&access_time) == -1)
 		fatal_error_exit("program failed to retrieve time with time() call! exiting...");
 	if (access_time - registrar->manager.suspend_time < SUSPENDTIME) {
-		logic_error("your account has been suspended, wait 5 minutes");
+		logic_error("your account has been suspended, wait 5 minutes then login again");
 		registrar = NULL;
 		return;
 	}
-	CHECK_INCTL(inctl_verify_passd(registrar->manager.passd));
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if ((inctl_get_manager_passd(obj.manager.passd) == SUCCESS) && (strcmp(registrar->manager.passd, obj.manager.passd) == 0)) {
+			break;
+		} else if (i == TRYCOUNT) {
+			registrar = NULL;
+			return;
+		}
 	registrar_type = MANAGER;
 	outctl_log("downloading lessons data from database...");
 	if ((_stat = download_objects(&lessons_list, &lessons_count, LESSONS)) == SUCCESS)
@@ -252,10 +410,40 @@ void handle_new_lesson(void)
 	object_t *obj = (object_t *) calloc(1, sizeof (object_t));
 	if (obj == NULL)
 		fatal_error_exit("memory allocation failed! exiting...");
-	CHECK_INCTL_FREE(inctl_get_lesson_name(obj->lesson.lname), obj);
-	CHECK_INCTL_FREE(inctl_get_lesson_sysid(&obj->lesson.sysid, lessons_list), obj);
-	CHECK_INCTL_FREE(inctl_get_lesson_unit(&obj->lesson.unit), obj);
-	CHECK_INCTL_FREE(inctl_get_lesson_type(&obj->lesson.type), obj);
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_lesson_lname(obj->lesson.lname) == SUCCESS) {
+			break;
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
+	for (int i = 1; i < TRYCOUNT; i++)
+		if (inctl_get_lesson_sysid(&obj->lesson.sysid) == SUCCESS) {
+			if (check_object_sysid(lessons_list, obj, NULL, LESSONS) == NOFOUND)
+				break;
+			logic_error("sysid %zu already in use, try different one", obj->lesson.sysid);
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_lesson_unit(&obj->lesson.unit) == SUCCESS) {
+			break;
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_lesson_type(&obj->lesson.type) == SUCCESS) {
+			break;
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
 	if ((_stat = add_object(lessons_list, obj)) != SUCCESS) {
 		stat_error(_stat, "failed to add new lesson, try again");
 		free((void *) obj);
@@ -269,13 +457,27 @@ void handle_new_scornum(void)
 	object_t *obj = (object_t *) calloc(1, sizeof (object_t));
 	if (obj == NULL)
 		fatal_error_exit("memory allocation failed! exiting...");
-	CHECK_INCTL_FREE(inctl_get_scornum_sysid(&obj->scornum.sysid, scornum_list), obj);
-	CHECK_INCTL_FREE(inctl_get_scornum_idnum(obj->scornum.idnumstr, &obj->scornum.idnumint), obj);
-	CHECK_INCTL_FREE(inctl_get_scornum_score(&obj->scornum.score), obj);
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if ((inctl_get_scornum_sysid(&obj->scornum.sysid) == SUCCESS) && (inctl_get_scornum_idnum(obj->scornum.idnumstr, &obj->scornum.idnumint) == SUCCESS)) {
+			if (check_object_sysid(scornum_list, obj, NULL, SCORNUM) == NOFOUND)
+				break;
+			logic_error("combination of sysid %zu and idnum %s already in use, try different one", obj->scornum.sysid, obj->scornum.idnumstr);
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_scornum_score(&obj->scornum.score) == SUCCESS) {
+			break;
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
 	if (time(&obj->scornum.add_time) == -1)
 		fatal_error_exit("program failed to retrieve time with time() call! exiting...");
-	obj->scornum.member.sysid = registrar->scornum.sysid;
-	obj->scornum.member.type = registrar_type;
+	obj->scornum.member.sysid = ((obj->scornum.member.type = registrar_type) == MANAGER) ? registrar->manager.sysid : registrar->employe.sysid;
 	if ((_stat = add_object(scornum_list, obj)) != SUCCESS) {
 		stat_error(_stat, "failed to add new score, try again");
 		free((void *) obj);
@@ -294,7 +496,16 @@ void handle_change_lesson(void)
 		handle_change_lesson_exit,
 		handle_change_lesson_failure
 	};
-	CHECK_INCTL(inctl_search_lesson_sysid(&editable_obj, lessons_list));
+	object_t obj;
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_lesson_sysid(&obj.lesson.sysid) == SUCCESS) {
+			if (check_object_sysid(lessons_list, &obj, &edit_obj, LESSONS) == SUCCESS)
+				break;
+			logic_error("there is no lesson with sysid %zu in database", obj.lesson.sysid);
+		} else if (i == TRYCOUNT) {
+			return;
+		}
+	CLEARSCRN();
 	while (true)
 		HANDLE(inact_change_lesson_info);
 	return;
@@ -302,19 +513,31 @@ void handle_change_lesson(void)
 
 void handle_change_lesson_name(void)
 {
-	CHECK_INCTL(inctl_get_lesson_name(editable_obj->lesson.lname));
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_lesson_lname(edit_obj->lesson.lname) == SUCCESS)
+			break;
+		else if (i == TRYCOUNT)
+			return;
 	return;
 }
 
 void handle_change_lesson_unit(void)
 {
-	CHECK_INCTL(inctl_get_lesson_unit(&editable_obj->lesson.unit));
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_lesson_unit(&edit_obj->lesson.unit) == SUCCESS)
+			break;
+		else if (i == TRYCOUNT)
+			return;
 	return;
 }
 
 void handle_change_lesson_type(void)
 {
-	CHECK_INCTL(inctl_get_lesson_type(&editable_obj->lesson.type));
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_lesson_type(&edit_obj->lesson.type) == SUCCESS)
+			break;
+		else if (i == TRYCOUNT)
+			return;
 	return;
 }
 
@@ -322,7 +545,7 @@ void handle_change_lesson_back(void)
 {
 	status_t _stat = SUCCESS;
 	if ((_stat = upload_objects(lessons_list, LESSONS)) != SUCCESS)
-		stat_error(_stat, "failed to sync lessons linked-list to database");
+		stat_error(_stat, "failed to sync lessons linked-list to database! your recent edits haven't save, do it again");
 	return;
 }
 
@@ -342,10 +565,22 @@ void handle_change_lesson_failure(void)
 void handle_change_scornum(void)
 {
 	status_t _stat = SUCCESS;
-	CHECK_INCTL(inctl_search_scornum(&editable_obj, scornum_list));
-	CHECK_INCTL(inctl_get_scornum_score(&editable_obj->scornum.score));
+	object_t obj;
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if ((inctl_get_scornum_sysid(&obj.scornum.sysid) == SUCCESS) && (inctl_get_scornum_idnum(obj.scornum.idnumstr, &obj.scornum.idnumint) == SUCCESS)) {
+			if (check_object_sysid(scornum_list, &obj, &edit_obj, SCORNUM) == SUCCESS)
+				break;
+			logic_error("there is no score with sysid %zu and idnum %s in database", obj.scornum.sysid, obj.scornum.idnumstr);
+		} else if (i == TRYCOUNT) {
+			return;
+		}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_scornum_score(&edit_obj->scornum.score) == SUCCESS)
+			break;
+		else if (i == TRYCOUNT)
+			return;
 	if ((_stat = upload_objects(scornum_list, SCORNUM)) != SUCCESS)
-		stat_error(_stat, "failed to sync scores linked-list to database");
+		stat_error(_stat, "failed to sync scores linked-list to database! your recent edits havan't save, do it again");
 	return;
 }
 
@@ -354,13 +589,17 @@ void handle_remove_lesson(void)
 	status_t _stat = SUCCESS;
 	object_t obj;
 	object_t *found_obj;
-	CHECK_INCTL(inctl_get_lesson_sysid(&obj.lesson.sysid, NULL));
-	if ((_stat = check_object_sysid(lessons_list, &obj, &found_obj, LESSONS)) == NOFOUND) {
-		found_error("there is no lesson with sysid %zu in database", obj.lesson.sysid);
-	} else {
-		if (remove_object(lessons_list, found_obj) == NOFOUND)
-			found_error("remove failed! this error must not happen! ABORT...");
-	}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_lesson_sysid(&obj.lesson.sysid) == SUCCESS) {
+			if ((_stat = check_object_sysid(lessons_list, &obj, &found_obj, LESSONS)) == NOFOUND) {
+				if (remove_object(lessons_list, found_obj) == NOFOUND)
+					found_error("remove failed! this error must not happen! ABORT...");
+				break;
+			}
+			found_error("there is no lesson with sysid %zu in database", obj.lesson.sysid);
+		} else if (i == TRYCOUNT) {
+			return;
+		}
 	return;
 }
 
@@ -442,23 +681,83 @@ void handle_manager_account(void)
 	return;
 }
 
-void handle_manager_account_password(void);
+void handle_manager_account_password(void)
+{
+	char passd[MAXPASSDSIZE] = {0};
+	for (int i = 0; i <= TRYCOUNT; i++)
+		if (inctl_get_manager_passd(passd) == SUCCESS)
+			break;
+		else if (i == TRYCOUNT)
+			return;
+	strncpy(registrar->manager.passd, passd, MAXPASSDSIZE);
+	return;
+}
 
-void handle_manager_account_phone(void);
+void handle_manager_account_phone(void)
+{
+	char phone[MAXPHONESIZE] = {0};
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_manager_phone(phone) == SUCCESS)
+			break;
+		else if (i == TRYCOUNT)
+			return;
+	strncpy(registrar->manager.phone, phone, MAXPHONESIZE);
+	return;
+}
 
-void handle_manager_account_email(void);
+void handle_manager_account_email(void)
+{
+	char email[MAXEMAILSIZE] = {0};
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_manager_email(email) == SUCCESS)
+			break;
+		else if (i == TRYCOUNT)
+			return;
+	strncpy(registrar->manager.email, email, MAXEMAILSIZE);
+	return;
+}
 
-void handle_manager_account_back(void);
+void handle_manager_account_back(void)
+{
+	status_t _stat = SUCCESS;
+	if ((_stat = upload_objects(manager_list, MANAGER)) != SUCCESS)
+		stat_error(_stat, "failed to sync manager linked-list to database! your recent edits haven't save, do it again");
+}
 
-void handle_manager_account_exit(void);
+void handle_manager_account_exit(void)
+{
+	handle_manager_account_back();
+	exit(EXIT_SUCCESS);
+	return;
+}
 
-void handle_manager_account_failure(void);
+void handle_manager_account_failure(void)
+{
+	handle_admin_failure();
+	return;
+}
 
-void handle_manager_back(void);
+void handle_manager_back(void)
+{
+	status_t _stat = SUCCESS;
+	if ((_stat = upload_objects(lessons_list, LESSONS)) != SUCCESS)
+		stat_error(_stat, "failed to sync lessons linked-list to database");
+	if ((_stat = upload_objects(scornum_list, SCORNUM)) != SUCCESS)
+		stat_error(_stat, "failed to sync scores linked-list to database");
+}
 
-void handle_manager_exit(void);
+void handle_manager_exit(void)
+{
+	handle_manager_back();
+	exit(EXIT_SUCCESS);
+	return;
+}
 
-void handle_manager_failure(void);
+void handle_manager_failure(void)
+{
+	handle_admin_failure();
+	return;
+}
 
 void handle_employe(void)
 {
@@ -474,20 +773,35 @@ void handle_employe(void)
 		handle_employe_exit,
 		handle_employe_failure
 	};
+	object_t obj;
 	size_t student_count;
 	size_t scornum_count;
 	time_t access_time;
-	CHECK_INCTL(inctl_search_employe(&registrar, employe_list));
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_employe_uname(obj.employe.uname) == SUCCESS) {
+			obj.employe.sysid = checksum(obj.employe.uname, strnlen(obj.employe.uname, MAXUNAMESIZE));
+			if (check_object_sysid(employe_list, &obj, &registrar, EMPLOYE) == SUCCESS)
+				break;
+			logic_error("there is no username %s in database, first you need a Employee Account", obj.employe.uname);
+		} else if (i == TRYCOUNT) {
+			return;
+		}
 	if (time(&access_time) == -1)
 		fatal_error_exit("program failed to retrieve time with time() call! exiting...");
 	if (access_time - registrar->employe.suspend_time < SUSPENDTIME) {
-		logic_error("your account has been suspended, wait 5 minutes");
+		logic_error("your account has been suspended, wait 5 minutes then login again");
 		registrar = NULL;
 		return;
 	}
-	CHECK_INCTL(inctl_verify_passd(registrar->employe.passd));
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if ((inctl_get_employe_passd(obj.employe.passd) == SUCCESS) && (strcmp(registrar->employe.passd, obj.employe.passd) == 0)) {
+			break;
+		} else if (i == TRYCOUNT) {
+			registrar = NULL;
+			return;
+		}
 	registrar_type = EMPLOYE;
-	outctl_log("downloading students data from database...");
+	outctl_log("downloading lessons data from database...");
 	if ((_stat = download_objects(&student_list, &student_count, STUDENT)) == SUCCESS)
 		outctl_log("%zu students found and downloaded", student_count);
 	else
@@ -503,25 +817,94 @@ void handle_employe(void)
 	return;
 }
 
-void handle_new_student(void);
+void handle_new_student(void)
+{
+	status_t _stat = SUCCESS;
+	object_t *obj = (object_t *) calloc(1, sizeof (object_t));
+	if (obj == NULL)
+		fatal_error_exit("memory allocation failed! exiting...");
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_student_fname(obj->student.fname) == SUCCESS) {
+			break;
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_student_lname(obj->student.lname) == SUCCESS) {
+			break;
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_student_sysid(&obj->student.sysid) == SUCCESS) {
+			if (check_object_sysid(student_list, obj, NULL, STUDENT) == NOFOUND)
+				break;
+			logic_error("sysid %zu already in use, try different one", obj->student.sysid);
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_student_major(obj->student.major) == SUCCESS) {
+			break;
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_student_idnum(obj->student.idnum) == SUCCESS) {
+			break;
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_student_birth(obj->student.birth) == SUCCESS) {
+			break;
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_student_birth_time(&obj->student.birth_time) == SUCCESS) {
+			break;
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_student_phone(obj->student.phone) == SUCCESS) {
+			break;
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_student_email(obj->student.email) == SUCCESS) {
+			break;
+		} else if (i == TRYCOUNT) {
+			free((void *) obj);
+			obj = NULL;
+			return;
+		}
+	if ((_stat = add_object(scornum_list, obj)) != SUCCESS) {
+		stat_error(_stat, "failed to add new score, try again");
+		free((void *) obj);
+	}
+	return;
+}
 
-void handle_new_scornum(void);
-
-void handle_change_student(void);
-
-void handle_employe_reports(void);
-
-void handle_employe_account(void);
-
-void handle_employe_back(void);
-
-void handle_employe_back(void);
-
-void handle_employe_exit(void);
-
-void handle_employe_failure(void);
-
-void handle_employe_change_student(void)
+void handle_change_student(void)
 {
 	handler_t hdl[] = {
 		handle_change_student_major,
@@ -531,22 +914,70 @@ void handle_employe_change_student(void)
 		handle_change_student_exit,
 		handle_change_student_failure
 	};
+	object_t obj;
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_student_sysid(&obj.student.sysid) == SUCCESS) {
+			if (check_object_sysid(student_list, &obj, &edit_obj, STUDENT) == SUCCESS)
+				break;
+			logic_error("there is no student with sysid %zu in database", obj.student.sysid);
+		} else if (i == TRYCOUNT) {
+			return;
+		}
 	while (true)
 		HANDLE(inact_change_student_info);
 	return;
 }
 
-void handle_change_student_major(void);
+void handle_change_student_major(void)
+{
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_student_major(edit_obj->student.major) == SUCCESS)
+			break;
+		else if (i == TRYCOUNT)
+			return;
+	return;
+}
 
-void handle_change_student_phone(void);
+void handle_change_student_phone(void)
+{
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_student_phone(edit_obj->student.phone) == SUCCESS)
+			break;
+		else if (i == TRYCOUNT)
+			return;
+	return;
+}
 
-void handle_change_student_email(void);
+void handle_change_student_email(void)
+{
+	for (int i = 1; i <= TRYCOUNT; i++)
+		if (inctl_get_student_email(edit_obj->student.email) == SUCCESS)
+			break;
+		else if (i == TRYCOUNT)
+			return;
+	return;
+}
 
-void handle_change_student_back(void);
+void handle_change_student_back(void)
+{
+	status_t _stat = SUCCESS;
+	if ((_stat = upload_objects(student_list, STUDENT)) != SUCCESS)
+		stat_error(_stat, "failed to sync student linked-list to database");
+	return;
+}
 
-void handle_change_student_exit(void);
+void handle_change_student_exit(void)
+{
+	handle_change_student_back();
+	exit(EXIT_SUCCESS);
+	return;
+}
 
-void handle_change_student_failure(void);
+void handle_change_student_failure(void)
+{
+	handle_admin_failure();
+	return;
+}
 
 void handle_employe_reports(void)
 {
@@ -599,17 +1030,85 @@ void handle_employe_account(void)
 	return;
 }
 
-void handle_employe_account_password(void);
+void handle_employe_account_password(void)
+{
+	char passd[MAXPASSDSIZE] = {0};
+	for (int i = 0; i <= TRYCOUNT; i++)
+		if (inctl_get_employe_passd(passd) == SUCCESS)
+			break;
+		else if (i == TRYCOUNT)
+			return;
+	strncpy(registrar->employe.passd, passd, MAXPASSDSIZE);
+	return;
+}
 
-void handle_employe_account_phone(void);
+void handle_employe_account_phone(void)
+{
+	char phone[MAXPHONESIZE] = {0};
+	for (int i = 0; i <= TRYCOUNT; i++)
+		if (inctl_get_employe_phone(phone) == SUCCESS)
+			break;
+		else if (i == TRYCOUNT)
+			return;
+	strncpy(registrar->employe.phone, phone, MAXPHONESIZE);
+	return;
+}
 
-void handle_employe_account_email(void);
+void handle_employe_account_email(void)
+{
+	char email[MAXEMAILSIZE] = {0};
+	for (int i = 0; i <= TRYCOUNT; i++)
+		if (inctl_get_employe_email(email) == SUCCESS)
+			break;
+		else if (i == TRYCOUNT)
+			return;
+	strncpy(registrar->employe.email, email, MAXEMAILSIZE);
+	return;
+}
 
-void handle_employe_account_back(void);
+void handle_employe_account_back(void)
+{
+	status_t _stat = SUCCESS;
+	if ((_stat = upload_objects(employe_list, EMPLOYE)) != SUCCESS)
+		stat_error(_stat, "failed to sync employe linked-list to database");
+	return;
+}
 
-void handle_employe_account_exit(void);
+void handle_employe_account_exit(void)
+{
+	handle_employe_account_back();
+	exit(EXIT_SUCCESS);
+	return;
+}
 
-void handle_employe_account_failure(void);
+void handle_employe_account_failure(void)
+{
+	handle_admin_failure();
+	return;
+}
+
+void handle_employe_back(void)
+{
+	status_t _stat = SUCCESS;
+	if ((_stat = upload_objects(student_list, STUDENT)) != SUCCESS)
+		stat_error(_stat, "failed to sync student linked-list to database");
+	if ((_stat = upload_objects(scornum_list, SCORNUM)) != SUCCESS)
+		stat_error(_stat, "failed to sync scores linked-list to database");
+	return;
+}
+
+void handle_employe_exit(void)
+{
+	handle_employe_back();
+	exit(EXIT_SUCCESS);
+	return;
+}
+
+void handle_employe_failure(void)
+{
+	handle_admin_failure();
+	return;
+}
 
 void handle_back(void)
 {

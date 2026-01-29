@@ -6,6 +6,7 @@
 #include "inputctl.h"
 #include "outputctl.h"
 #include "errorctl.h"
+#include "utils/checksum.h"
 #include "utils/scrnclear.h"
 #include <stdlib.h>
 
@@ -140,18 +141,6 @@ void handle_new_scornum(void);
 
 void handle_change_student(void);
 
-void handle_employe_reports(void);
-
-void handle_employe_account(void);
-
-void handle_employe_back(void);
-
-void handle_employe_exit(void);
-
-void handle_employe_failure(void);
-
-void handle_employe_change_student(void);
-
 void handle_change_student_major(void);
 
 void handle_change_student_phone(void);
@@ -197,6 +186,14 @@ void handle_employe_account_back(void);
 void handle_employe_account_exit(void);
 
 void handle_employe_account_failure(void);
+
+void handle_employe_back(void);
+
+void handle_employe_exit(void);
+
+void handle_employe_failure(void);
+
+void handle_employe_change_student(void);
 
 void handle_back(void);
 
