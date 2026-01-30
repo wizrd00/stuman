@@ -2,9 +2,25 @@
 #define STUDENTMANAGER_INPUTCTL_H
 
 #include "types.h"
-#include "utils/unamecheck.h"
-#include "utils/passdcheck.h"
+#include "utils/fmtcheck.h"
+#include <string.h>
 #include <stdio.h>
+#if defined(__linux__)
+#include <termios.h>
+#elif defined(_WIN32)
+#include <conio.h>
+#else
+#error "Unsupported OS"
+#endif
+
+#define INCTL_DATESIZE 11
+
+#define INCTL_DATEMSG "\nEnter start date of member in format yyyy/mm/dd : "
+#define INCTL_FNAMEMSG "\nEnter the first name : "
+#define INCTL_LNAMEMSG "\nEnter the last name : "
+#define INCTL_UNAMEMSG "\nEnter a username (valid username consists alphabet, numbers and ._-) : "
+#define INCTL_PASSDMSG "\nEnter a password (secure passwords must contain alphabets, numbers and special characters like @ etc.) : "
+#define INCTL_GNAMEMSG "\nEnter Group name : "
 
 status_t inctl_get_uname(char *uname, const char *msg);
 

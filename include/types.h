@@ -40,10 +40,14 @@ typedef enum {
 	NOSYSID,
 	DNFETCH,
 	INVPASS,
+	FAILFMT,
 	ERRALOC,
 	ERROPEN,
 	ERRSEEK,
-	ERRCLOS
+	ERRREAD,
+	ERRWRIT,
+	ERRCLOS,
+	ERRTIME
 } status_t;
 
 typedef enum {
